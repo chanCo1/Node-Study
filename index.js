@@ -5,13 +5,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const { User } = require('./models/User');
+const config = require('./config/key');
 
 // 데이터를 분석해서 가져온다
 app.use(bodyParser.urlencoded({ extended: true }));
 // json 타입을 분석해서 가져온다.
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb+srv://chanco:abcd1234@cluster.h1gcy.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect(config.mongoURI)
   .then(() => console.log('Success!'))
   .catch(err => console.log(err));
 
