@@ -39,8 +39,7 @@ const userSchema = mongoose.Schema({
 // Arrow functions explicitly prevent binding this,
 // so your method will not have access to the document and the above examples will not work. )
 userSchema.pre('save', function (next) {
-  let user = this;
-  console.log(user);
+  const user = this;
 
   // password 가 변환 돨때만 암호화
   if (user.isModified('password')) {
@@ -62,11 +61,23 @@ userSchema.pre('save', function (next) {
 userSchema.methods.comparePassword = function (plainPassword, cb) {
   // 암호화된 비밀번호가 같은지 확인
   bcrypt.compare(plainPassword, this.password, (err, isMatch) => {
-    if (err) return cb(err), cd(null, isMatch);
+    if (err) return cb(err)
+    cb(null, isMatch);
   });
 };
 
-userSchema
+userSchema.methods.generateToken = function(cb) {
+  const user = this;
+
+  // jwt를 이용해서 token 생성
+  const token = jwt.sign(user._id.toHexString(), 'secretToken');
+
+  user.token = token;
+  user.save((err, user) => {
+    if(err) return cb(err)
+    cb(null, user)
+  });
+};
 
 const User = mongoose.model('User', userSchema);
 
