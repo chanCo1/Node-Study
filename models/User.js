@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 const saltRounds = 10;
 
 const userSchema = mongoose.Schema({
@@ -34,26 +36,37 @@ const userSchema = mongoose.Schema({
 });
 
 // 화살표 함수를 썼더니 this가 인식을 못했다.. 왜?
-// Arrow functions explicitly prevent binding this, 
+// Arrow functions explicitly prevent binding this,
 // so your method will not have access to the document and the above examples will not work. )
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   let user = this;
-  console.log(user)
+  console.log(user);
 
   // password 가 변환 돨때만 암호화
   if (user.isModified('password')) {
     // 비밀번호를 암호화 시킨다.
     bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) return next(err);
-  
+
       bcrypt.hash(user.password, salt, (err, hash) => {
         if (err) return next(err);
         user.password = hash;
         next();
       });
     });
-  };
+  } else {
+    next();
+  }
 });
+
+userSchema.methods.comparePassword = function (plainPassword, cb) {
+  // 암호화된 비밀번호가 같은지 확인
+  bcrypt.compare(plainPassword, this.password, (err, isMatch) => {
+    if (err) return cb(err), cd(null, isMatch);
+  });
+};
+
+userSchema
 
 const User = mongoose.model('User', userSchema);
 
