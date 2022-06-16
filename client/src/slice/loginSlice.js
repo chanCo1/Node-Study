@@ -2,26 +2,27 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // 비동기 처리 함수 구현
-export const example = createAsyncThunk('path/example', async (payload, {rejectWuthValue}) => {
+export const login = createAsyncThunk('first/login', async (payload, {rejectWithValue}) => {
   let result = null;
 
   try {
-    result = await axios.get();
-  } catch(err) {
-    result = rejectWuthValue(err.response);
-  }
+    result = await axios.post('/api/users/login', payload);
 
-  if(result.data.faultInfo !== undefined) {
-    const err = new Error();
-    err.reponse = { status: 500, statusText: result.data.faultInfo.message };
-    throw err;
-  };
+    if(result.data.faultInfo !== undefined) {
+      const err = new Error();
+      err.reponse = { status: 500, statusText: result.data.faultInfo.message };
+      throw err;
+    };
+
+  } catch(err) {
+    result = rejectWithValue(err.response);
+  }
 
   return result;
 });
 
-const exampleSlice = createSlice({
-  name: 'example',
+const loginSlice = createSlice({
+  name: 'login',
   initialState: {
     data: null,
     loading: false,
@@ -29,11 +30,11 @@ const exampleSlice = createSlice({
   },
 
   extraReducers: {
-    [example.pending]: (state, {payload}) => {  // pending -> 로딩
+    [login.pending]: (state, {payload}) => {  // pending -> 로딩
       return {...state, loading: true}
     },
 
-    [example.fulfilled]: (state, {payload}) => {  // fulfilled -> ajax완료
+    [login.fulfilled]: (state, {payload}) => {  // fulfilled -> ajax완료
       return {
         data: payload?.data,
         loading: false,
@@ -41,7 +42,7 @@ const exampleSlice = createSlice({
       }
     },
 
-    [example.rejected]: (state, {payload}) => {  // rejected -> error
+    [login.rejected]: (state, {payload}) => {  // rejected -> error
       return {
         data: payload?.data,
         loading: false,
@@ -54,4 +55,4 @@ const exampleSlice = createSlice({
   }
 });
 
-export default exampleSlice.reducer;
+export default loginSlice.reducer;
