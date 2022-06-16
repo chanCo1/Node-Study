@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -6,11 +6,16 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../../../slice/loginSlice';
 
 const LoginContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
+   position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+
+  h1 {
+    color: cadetblue;
+    text-align: center;
+  }
 
   form {
     display: flex;
@@ -46,14 +51,16 @@ const LoginPage = () => {
 
     if(data.loginSuccess) {
       navigate('/');
+    } else {
+      alert('로그인 안됨');
     }
     // data.loginSuccess ? setLoginCheck(true) : setLoginCheck(false);
   }, [email, password, dispatch, data, navigate]);
 
-
-
   return (
     <LoginContainer>
+      <h1>Login Page</h1>
+
       <form onSubmit={onSubmit}>
         <label htmlFor="">Email</label>
         <input type="email" value={email} onChange={onChangeEmail} />

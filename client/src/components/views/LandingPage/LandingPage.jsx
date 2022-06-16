@@ -3,34 +3,32 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 const LandingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  color: cadetblue;
 `;
 
 const LandingPage = () => {
 
   useEffect(() => {
 
-    // (async () => {
-    //   try {
-    //     const response = await axios.get('/api/hello');
-    //     console.log(response.data);
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // })();
-
-    axios.get('/api/hello')
-    .then(response => { console.log(response) })
-
+    (async () => {
+      try {
+        const response = await axios.get('/api/hello');
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+    
   }, []);
 
   return (
     <LandingContainer>
-      <h1>시작 페이지</h1>
+      <h1>&lt; / &gt;</h1>
     </LandingContainer>
   );
 };
