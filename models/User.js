@@ -61,21 +61,36 @@ userSchema.pre('save', function (next) {
 userSchema.methods.comparePassword = function (plainPassword, cb) {
   // 암호화된 비밀번호가 같은지 확인
   bcrypt.compare(plainPassword, this.password, (err, isMatch) => {
-    if (err) return cb(err)
+    if (err) return cb(err);
     cb(null, isMatch);
   });
 };
 
-userSchema.methods.generateToken = function(cb) {
+userSchema.methods.generateToken = function (cb) {
   const user = this;
 
   // jwt를 이용해서 token 생성
   const token = jwt.sign(user._id.toHexString(), 'secretToken');
 
   user.token = token;
+  
   user.save((err, user) => {
-    if(err) return cb(err)
-    cb(null, user)
+    if (err) return cb(err);
+    cb(null, user);
+  });
+};
+
+userSchema.statics.findByToken = function (token, cb) {
+  const user = this;
+
+  // 토큰을 decode 한다.
+  jwt.verify(token, 'secretToken', function (err, decoded) {
+    // 유저 아이디를 이용해서 유저를 찾은 다음에 클라이언트에서 가져온 토큰과 DB에 보관된 토큰이 일치하는지 확인
+
+    user.findOne({ _id: decoded, token: token }, function (err, user) {
+      if (err) return cb(err);
+      cb(null, user);
+    });
   });
 };
 
