@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import { login } from '../../../slice/loginSlice';
+import { login } from '../slice/loginSlice';
 
 const LoginContainer = styled.div`
    position: absolute;

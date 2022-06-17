@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import { register } from '../../../slice/registerSlice';
+import { register } from '../slice/registerSlice';
 
 const RegisterContainer = styled.div`
   position: absolute;
